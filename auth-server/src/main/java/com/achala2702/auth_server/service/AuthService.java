@@ -1,7 +1,13 @@
 package com.achala2702.auth_server.service;
 
-import com.achala2702.auth_server.dto.UserRegisterDto;
+import com.achala2702.auth_server.dto.UserLoginRequestDto;
+import com.achala2702.auth_server.dto.UserLoginResponseDto;
+import com.achala2702.auth_server.dto.UserRegisterRequestDto;
+import com.achala2702.auth_server.exception.UserNotFoundException;
+import com.achala2702.auth_server.model.UserModel;
 import com.achala2702.auth_server.repository.AuthRepository;
+import com.achala2702.auth_server.util.JwtUtil;
+import com.achala2702.auth_server.util.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +16,32 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final AuthRepository authRepository;
+    private final UserMapper userMapper;
+    private final JwtUtil jwtUtil;
 
-    public String registerUser(UserRegisterDto userRegisterDto) {
-        //logic to check whether user already in db and save user;
-        if(authRepository.existsByEmail(userRegisterDto.getEmail())){
-            return "user found";
+    public String registerUser(UserRegisterRequestDto userRegisterDto) {
+        //check whether user already in db
+        if(authRepository.existsByEmail(userRegisterDto.email())){
+            return "Registration failed: Email is already associated with an existing account.";
         }
+        //map uer req to model and save
+        UserModel user = userMapper.mapToUserModel(userRegisterDto);
+        authRepository.save(user);
+        return "User registered successfully.";
+    }
 
-        return "registration successful";
+    public UserLoginResponseDto userLogin(UserLoginRequestDto userLoginRequestDto) {
+        UserModel user = authRepository.findByEmail(userLoginRequestDto.email()).orElseThrow(()->new UserNotFoundException("No account found with the provided email address."));
+
+        //generate token
+        String token = jwtUtil.generateJwt(user.getEmail());
+
+        return UserLoginResponseDto.builder()
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .userAddress(user.getUserAddress())
+                .token(token)
+                .build();
     }
 }

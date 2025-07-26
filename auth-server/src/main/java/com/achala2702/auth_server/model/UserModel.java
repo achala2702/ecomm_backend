@@ -1,12 +1,14 @@
 package com.achala2702.auth_server.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
 @Table(name = "user_table")
 public class UserModel {
 
@@ -21,4 +23,6 @@ public class UserModel {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
+    @Embedded
+    private UserAddress userAddress;
 }
