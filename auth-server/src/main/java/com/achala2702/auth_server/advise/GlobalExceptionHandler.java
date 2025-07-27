@@ -34,4 +34,15 @@ public class GlobalExceptionHandler {
                         .errors(e.getMessage())
                         .build());
     }
+
+    //exception handler for all the unhandled exceptions
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleUnhandledException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ErrorResponseDto.builder()
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .timeStamp(LocalDateTime.now())
+                        .errors(e.getMessage())
+                        .build());
+    }
 }
