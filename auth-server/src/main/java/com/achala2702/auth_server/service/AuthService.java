@@ -3,6 +3,7 @@ package com.achala2702.auth_server.service;
 import com.achala2702.auth_server.dto.UserLoginRequestDto;
 import com.achala2702.auth_server.dto.UserLoginResponseDto;
 import com.achala2702.auth_server.dto.UserRegisterRequestDto;
+import com.achala2702.auth_server.exception.UserAlreadyExistsException;
 import com.achala2702.auth_server.exception.UserNotFoundException;
 import com.achala2702.auth_server.model.UserModel;
 import com.achala2702.auth_server.repository.AuthRepository;
@@ -22,7 +23,7 @@ public class AuthService {
     public String registerUser(UserRegisterRequestDto userRegisterDto) {
         //check whether user already in db
         if(authRepository.existsByEmail(userRegisterDto.email())){
-            return "Registration failed: Email is already associated with an existing account.";
+            throw new UserAlreadyExistsException("Registration failed: Email is already associated with an existing account.");
         }
         //map uer req to model and save
         UserModel user = userMapper.mapToUserModel(userRegisterDto);
