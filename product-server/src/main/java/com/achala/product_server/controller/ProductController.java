@@ -7,7 +7,6 @@ import com.achala.product_server.dto.ProductResponseDto;
 import com.achala.product_server.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
