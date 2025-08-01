@@ -4,7 +4,8 @@ import com.achala2702.auth_server.model.UserAddress;
 import lombok.Builder;
 
 @Builder
-public record UserLoginResponseDto(
+public record UserValidateResponseDto(
+        Integer userId,
         String email,
         String firstName,
         String lastName,

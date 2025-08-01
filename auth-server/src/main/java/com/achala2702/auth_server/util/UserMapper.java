@@ -1,6 +1,7 @@
 package com.achala2702.auth_server.util;
 
 import com.achala2702.auth_server.dto.UserRegisterRequestDto;
+import com.achala2702.auth_server.dto.UserValidateResponseDto;
 import com.achala2702.auth_server.model.UserModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,16 @@ public class UserMapper {
                 .firstName(requestDto.firstName())
                 .lastName(requestDto.lastName())
                 .userAddress(requestDto.userAddress())
+                .build();
+    }
+
+    public UserValidateResponseDto mapToUserValidateResponseDto(UserModel userModel) {
+        return UserValidateResponseDto.builder()
+                .userId(userModel.getUserId())
+                .email(userModel.getEmail())
+                .firstName(userModel.getFirstName())
+                .lastName(userModel.getLastName())
+                .userAddress(userModel.getUserAddress())
                 .build();
     }
 }

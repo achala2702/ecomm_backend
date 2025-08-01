@@ -1,5 +1,6 @@
 package com.achala2702.auth_server.util;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -34,5 +35,13 @@ public class JwtUtil {
                 .expiration(expirationDate)
                 .signWith(jwtSecretKey)
                 .compact();
+    }
+
+    public Claims validateJwt(String token) {
+        return Jwts.parser()
+                .verifyWith(jwtSecretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

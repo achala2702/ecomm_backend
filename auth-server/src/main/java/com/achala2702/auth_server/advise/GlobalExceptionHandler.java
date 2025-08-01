@@ -3,6 +3,8 @@ package com.achala2702.auth_server.advise;
 import com.achala2702.auth_server.dto.ErrorResponseDto;
 import com.achala2702.auth_server.exception.UserAlreadyExistsException;
 import com.achala2702.auth_server.exception.UserNotFoundException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,12 +26,34 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    //handle suer-already-exists exception
+    //handle user-already-exists exception
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ErrorResponseDto> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ErrorResponseDto.builder()
                         .status(HttpStatus.CONFLICT)
+                        .timeStamp(LocalDateTime.now())
+                        .errors(e.getMessage())
+                        .build());
+    }
+
+    //handle signature exception jwt
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ErrorResponseDto> handleSignatureException(SignatureException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ErrorResponseDto.builder()
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .timeStamp(LocalDateTime.now())
+                        .errors(e.getMessage())
+                        .build());
+    }
+
+    //handle ExpiredJwt exception
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponseDto> handleExpiredJwtException(ExpiredJwtException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ErrorResponseDto.builder()
+                        .status(HttpStatus.UNAUTHORIZED)
                         .timeStamp(LocalDateTime.now())
                         .errors(e.getMessage())
                         .build());
