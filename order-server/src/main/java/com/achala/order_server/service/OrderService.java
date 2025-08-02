@@ -16,11 +16,10 @@ public class OrderService {
 
     public Integer CreateOrder(OrderRequestDto orderRequestDto, HttpServletRequest request) {
 
+        //validating the user and get user information form auth server
         String cookieHeader = request.getHeader("Cookie");
         ResponseEntity<UserValidateResponseDto> authResponse = authServerClient.validateUser(cookieHeader);
 
-        //need to handle error response coming through auth server open feign
-        System.out.println(authResponse);
 
         return null;
     }
