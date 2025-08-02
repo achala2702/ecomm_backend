@@ -17,7 +17,7 @@ public record OrderRequestDto(
         @NotNull(message = "payment method required")
         PaymentMethod paymentMethod,
         @NotNull(message = "customer id required")
-        Integer customer_id,
+        Integer customerId,
         @NotEmpty(message = "at least one order item required")
         List<PurchaseItemRequestDto> orderItems
 ) {

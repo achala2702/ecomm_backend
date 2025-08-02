@@ -1,12 +1,13 @@
 package com.achala.order_server.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "order_item")
 public class OrderItem {
