@@ -2,6 +2,7 @@ package com.achala.order_server.controller;
 
 import com.achala.order_server.dto.OrderRequestDto;
 import com.achala.order_server.service.OrderService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/create-order")
-    public ResponseEntity<Integer> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.CreateOrder(orderRequestDto));
+    public ResponseEntity<Integer> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.CreateOrder(orderRequestDto, request));
     }
 }
