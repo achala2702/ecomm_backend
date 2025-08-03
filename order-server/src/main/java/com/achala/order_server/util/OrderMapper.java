@@ -1,6 +1,8 @@
 package com.achala.order_server.util;
 
 import com.achala.order_server.dto.OrderRequestDto;
+import com.achala.order_server.dto.OrderResponseDto;
+import com.achala.order_server.dto.ProductPurchaseResponseDto;
 import com.achala.order_server.dto.PurchaseItemRequestDto;
 import com.achala.order_server.model.OrderItem;
 import com.achala.order_server.model.OrderModel;
@@ -38,5 +40,17 @@ public class OrderMapper {
                      .orderItem(order)
                      .build())
              .collect(Collectors.toList());
+    }
+
+    //map order model to order responseDto
+    public OrderResponseDto mapToOrderResponseDto(OrderModel orderModel, List<ProductPurchaseResponseDto> purchasedItems) {
+        return OrderResponseDto.builder()
+                .customerId(orderModel.getCustomerId())
+                .reference(orderModel.getReference())
+                .paymentMethod(orderModel.getPaymentMethod())
+                .totalAmount(orderModel.getTotalAmount())
+                .orderItems(purchasedItems)
+                .createdAt(orderModel.getCreatedAt())
+                .build();
     }
 }

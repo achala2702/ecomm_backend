@@ -10,7 +10,6 @@ import java.util.List;
 
 public record OrderRequestDto(
 
-        Integer orderId,
         String reference,
         @NotNull(message = "payment method required")
         PaymentMethod paymentMethod,

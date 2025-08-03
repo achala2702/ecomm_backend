@@ -6,12 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(
-        name = "auth-server",
-        url = "${application.config.auth-url}"
-)
+@FeignClient(name = "AUTH-SERVER")
 public interface AuthServerClient {
 
-    @GetMapping("/validate")
+    @GetMapping("/auth/validate")
     ResponseEntity<UserValidateResponseDto> validateUser(@RequestHeader("Cookie") String cookieHeader);
 }
