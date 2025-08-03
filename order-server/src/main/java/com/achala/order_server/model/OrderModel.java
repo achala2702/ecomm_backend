@@ -29,7 +29,7 @@ public class OrderModel {
     @Enumerated(value = EnumType.STRING)
     private PaymentMethod paymentMethod;
     private Integer customerId;
-    @OneToMany(mappedBy = "orderItem")
+    @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
     @CreatedDate
     @Column(updatable = false, nullable = false)

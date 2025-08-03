@@ -12,12 +12,8 @@ public record OrderRequestDto(
 
         Integer orderId,
         String reference,
-        @Positive(message = "total amount must be positive")
-        BigDecimal totalAmount,
         @NotNull(message = "payment method required")
         PaymentMethod paymentMethod,
-        @NotNull(message = "customer id required")
-        Integer customerId,
         @NotEmpty(message = "at least one order item required")
         List<PurchaseItemRequestDto> orderItems
 ) {

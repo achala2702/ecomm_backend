@@ -6,6 +6,7 @@ import com.achala.order_server.model.OrderItem;
 import com.achala.order_server.model.OrderModel;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,23 +14,29 @@ import java.util.stream.Collectors;
 public class OrderMapper {
 
     //maps OrderRequestDto to OrderModel
-    public OrderModel mapToOrderModel(OrderRequestDto request) {
-        return OrderModel.builder()
+    public OrderModel mapToOrderModel(OrderRequestDto request, Integer userId, BigDecimal totalAmount) {
+        OrderModel order = OrderModel.builder()
                 .reference(request.reference())
-                .totalAmount(request.totalAmount())
+                .totalAmount(totalAmount)
                 .paymentMethod(request.paymentMethod())
-                .customerId(request.customerId())
-                .orderItems(this.mapToOrderItem(request.orderItems()))
+                .customerId(userId)
                 .build();
+
+        //setting order items to order model
+        List<OrderItem> orderItems = this.mapToOrderItem(request.orderItems(), order);
+        order.setOrderItems(orderItems);
+
+        return order;
     }
 
     //maps List<PurchaseItemsRequestDto> to List<OrderItem>
-    public List<OrderItem> mapToOrderItem(List<PurchaseItemRequestDto> requestItems) {
+    public List<OrderItem> mapToOrderItem(List<PurchaseItemRequestDto> requestItems, OrderModel order) {
      return requestItems.stream()
-             .map(item->OrderItem.builder()
+             .map(item -> OrderItem.builder()
                      .productId(item.productId())
                      .quantity(item.quantity())
-             .build())
+                     .orderItem(order)
+                     .build())
              .collect(Collectors.toList());
     }
 }

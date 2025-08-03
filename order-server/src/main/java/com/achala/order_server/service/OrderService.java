@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,13 +31,23 @@ public class OrderService {
         String cookieHeader = request.getHeader("Cookie");
         ResponseEntity<UserValidateResponseDto> authResponse = authServerClient.validateUser(cookieHeader);
 
-        //calling the product server's purchase endpoint
+        //calling the product server's purchase endpoint to check with products db
         ResponseEntity<List<ProductPurchaseResponseDto>> productResponse = productServerClient.purchaseProducts(orderRequestDto.orderItems());
 
-        //saving the order to order database
-        OrderModel order = orderRepository.save(orderMapper.mapToOrderModel(orderRequestDto));
+        //getting the total price from the items store in db
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        assert productResponse.getBody() != null;
+        for(ProductPurchaseResponseDto product : productResponse.getBody()) {
+            totalAmount = totalAmount.add(product.price());
+        }
 
-        System.out.println(order);
+        //saving the order to order database
+        assert authResponse.getBody() != null;
+        OrderModel order = orderRepository.save(orderMapper.mapToOrderModel(orderRequestDto, authResponse.getBody().userId(), totalAmount));
+
+        //payment
+
+        //notification
 
         return null;
     }
