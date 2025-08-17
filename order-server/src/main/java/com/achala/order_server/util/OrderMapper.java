@@ -1,9 +1,6 @@
 package com.achala.order_server.util;
 
-import com.achala.order_server.dto.OrderRequestDto;
-import com.achala.order_server.dto.OrderResponseDto;
-import com.achala.order_server.dto.ProductPurchaseResponseDto;
-import com.achala.order_server.dto.PurchaseItemRequestDto;
+import com.achala.order_server.dto.*;
 import com.achala.order_server.model.OrderItem;
 import com.achala.order_server.model.OrderModel;
 import org.springframework.stereotype.Component;
@@ -50,6 +47,18 @@ public class OrderMapper {
                 .paymentMethod(orderModel.getPaymentMethod())
                 .totalAmount(orderModel.getTotalAmount())
                 .orderItems(purchasedItems)
+                .createdAt(orderModel.getCreatedAt())
+                .build();
+    }
+
+    //map to order confirmation dto
+    public OrderConfirmationDto mapToOrderConfirmationDto(UserValidateResponseDto customer, OrderModel orderModel, List<ProductPurchaseResponseDto> purchasedItems) {
+        return OrderConfirmationDto.builder()
+                .customer(customer)
+                .paymentMethod(orderModel.getPaymentMethod())
+                .orderItems(purchasedItems)
+                .totalAmount(orderModel.getTotalAmount())
+                .reference(orderModel.getReference())
                 .createdAt(orderModel.getCreatedAt())
                 .build();
     }
