@@ -2,10 +2,7 @@ package com.achala.order_server.service;
 
 import com.achala.order_server.client.AuthServerClient;
 import com.achala.order_server.client.ProductServerClient;
-import com.achala.order_server.dto.OrderRequestDto;
-import com.achala.order_server.dto.OrderResponseDto;
-import com.achala.order_server.dto.ProductPurchaseResponseDto;
-import com.achala.order_server.dto.UserValidateResponseDto;
+import com.achala.order_server.dto.*;
 import com.achala.order_server.model.OrderModel;
 import com.achala.order_server.repository.OrderRepository;
 import com.achala.order_server.util.OrderMapper;
@@ -24,6 +21,7 @@ public class OrderService {
     private final ProductServerClient productServerClient;
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final KafkaProducerService kafkaProducerService;
 
     public OrderResponseDto CreateOrder(OrderRequestDto orderRequestDto, HttpServletRequest request) {
 
@@ -47,7 +45,9 @@ public class OrderService {
 
         //todo payment
 
-        //todo notification
+        //sending confirmation msg to kafka
+        OrderConfirmationDto orderConfirmationDto = orderMapper.mapToOrderConfirmationDto(authResponse, order, productResponse);
+        kafkaProducerService.sendOrderConfirmation(orderConfirmationDto);
 
         return orderMapper.mapToOrderResponseDto(order, productResponse);
     }
